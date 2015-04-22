@@ -96,6 +96,9 @@ An apps hash is a contextual (see above) Hash, part of a plaintext data bag item
 * `[app]['local']` - If true, manage `[app]['files']` defined files and `[app]['permissions']` defined metadata in the "local" directory and "local.meta" instead of the "default" directory and "default.meta" (default - false, but forced true if download-url is specified)
 * `[app]['download']` - Information for downloading an app
 * `[app]['download']['url']` - URL of where to download the app .tar.gz or .spl file. Archive is expected to contain a top-level directory with name matching 'app' attribute above.
+* `[app]['download']['preserve']` - String, Comma Separated List of attributes to preserve from the local installation (if any). Default for master-apps is "", but default for local apps is "conf". Options available:
+  * "conf" - When present in the list, all configuration in /local and all lookup files that are not installed by the current version of the package are preserved.
+  * "lookups" - When present in the list, local copies of lookup files take precedence over any corresponding file installed by the package. 
 * `[app]['download']['version']` - Expected [version number][app.conf] (if any) used to determine if a new app should be downloaded.
 * `[app]['files']` - Hash of files to manage under the "default" or "local" directory.
 * `[app]['files'][filename]` - Contents of a particular file to manage. It can take 3 values, a hash of stanzas -> key-value pairs (then written with the splunk template), a string (written as is), or nil / false (deleted). If the hash or string is empty, the file is also deleted.
