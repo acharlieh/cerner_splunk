@@ -42,6 +42,8 @@ class Chef
         case name
         when %r{^system/(.+\.conf)$}
           @path = "etc/system/local/#{Regexp.last_match[1]}"
+        when %r{^shcluster/([^/]+)/(.+\.conf)$}
+          @path = "etc/shcluster/apps/#{Regexp.last_match[1]}/local/#{Regexp.last_match[2]}"
         when %r{^((?:master-)?app)s?/([^/]+)/(.+\.conf)$}
           @path = "etc/#{Regexp.last_match[1]}s/#{Regexp.last_match[2]}/local/#{Regexp.last_match[3]}"
         end
@@ -70,7 +72,6 @@ class Chef
 
       def after_created
         @path = "#{node['splunk']['home']}/#{@path}"
-
         config_file = ::File.basename(@path)
         return if KNOWN_CONFIG_FILES.include? config_file
         message = "#{config_file} is not known to this resource. Check spelling or submit a pull request."

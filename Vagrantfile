@@ -3,19 +3,24 @@
 
 Vagrant.require_version '>= 1.4.1'
 
-%w(vagrant-omnibus).each do |plugin|
+%w(vagrant-ohai vagrant-omnibus).each do |plugin|
   fail "Missing #{plugin}. Please install it!" unless Vagrant.has_plugin? plugin
 end
 
 @network = {
   chef:         { ip: '33.33.33.33', hostname: 'chef', ports: { 4000 => 4000 } },
-  c1_search:    { ip: '33.33.33.10', hostname: 'search.splunk', ports: { 8001 => 8000, 8091 => 8089 } },
   c1_master:    { ip: '33.33.33.11', hostname: 'master.splunk', ports: { 8002 => 8000, 8092 => 8089 } },
   c1_slave1:    { ip: '33.33.33.12', hostname: 'slave01.splunk', ports: { 8003 => 8000, 8093 => 8089 } },
   c1_slave2:    { ip: '33.33.33.13', hostname: 'slave02.splunk', ports: { 8004 => 8000, 8094 => 8089 } },
   c1_slave3:    { ip: '33.33.33.14', hostname: 'slave03.splunk', ports: { 8005 => 8000, 8095 => 8089 } },
-  s_standalone: { ip: '33.33.33.20', hostname: 'splunk2', ports: { 8006 => 8000, 8096 => 8089 } },
-  s_license:    { ip: '33.33.33.30', hostname: 'splunk-license', ports: { 8007 => 8000, 8097 => 8089 } },
+  c1_search1:   { ip: '33.33.33.15', hostname: 'search01.splunk', ports: { 8006 => 8000, 8096 => 8089 } },
+  c1_search2:   { ip: '33.33.33.16', hostname: 'search02.splunk', ports: { 8007 => 8000, 8097 => 8089 } },
+  c1_search3:   { ip: '33.33.33.17', hostname: 'search03.splunk', ports: { 8008 => 8000, 8098 => 8089 } },
+  c1_search4:   { ip: '33.33.33.18', hostname: 'search04.splunk', ports: { 8009 => 8000, 8099 => 8089 } },
+  c1_deployer:  { ip: '33.33.33.28', hostname: 'deployer.splunk', ports: { 8010 => 8000, 8100 => 8089 } },
+  s_standalone: { ip: '33.33.33.20', hostname: 'splunk2', ports: { 8011 => 8000, 8101 => 8089 } },
+  s_license:    { ip: '33.33.33.30', hostname: 'splunk-license', ports: { 8012 => 8000, 8102 => 8089 } },
+  s_search:    { ip: '33.33.33.31', hostname: 'splunk-search', ports: { 8013 => 8000, 8103 => 8089 } },
   f_default:    { ip: '33.33.33.50', hostname: 'default.forward', ports: { 9090 => 8089 } },
   f_debian:     { ip: '33.33.33.51', hostname: 'debian.forward', ports: { 9091 => 8089 } },
   f_heavy:      { ip: '33.33.33.52', hostname: 'heavy.forward', ports: { 9092 => 8089 } },
@@ -79,6 +84,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define :chef do |cfg|
     config.omnibus.chef_version = nil
+    config.ohai.primary_nic = 'eth1'
 
     cfg.vm.provision :shell, inline: 'rpm -q chefdk || curl -L https://omnitruck.chef.io/install.sh | bash -s -- -P chefdk'
 
@@ -168,16 +174,37 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  config.vm.define :c1_search do |cfg|
+  (1..4).each do |n|
+    symbol = "c1_search#{n}".to_sym
+    config.vm.define symbol do |cfg|
+      default_omnibus config
+      cfg.vm.provider :virtualbox do |vb|
+        vb.customize ['modifyvm', :id, '--memory', 256]
+      end
+      cfg.vm.provision :chef_client do |chef|
+        chef_defaults chef, symbol
+        if symbol == :c1_search3
+          chef.add_recipe 'cerner_splunk::shc_captain' # assign c1_search3 as the captain
+        elsif symbol == :c1_search4
+          chef.add_recipe 'cerner_splunk::shc_search_head'
+        else
+          chef.add_role 'bootstrap_shc_member'
+        end
+      end
+      network cfg, symbol
+    end
+  end
+
+  config.vm.define :c1_deployer do |cfg|
     default_omnibus config
     cfg.vm.provider :virtualbox do |vb|
       vb.customize ['modifyvm', :id, '--memory', 256]
     end
     cfg.vm.provision :chef_client do |chef|
-      chef_defaults chef, :c1_search
-      chef.add_recipe 'cerner_splunk::search_head'
+      chef_defaults chef, :c1_deployer
+      chef.add_recipe 'cerner_splunk::shc_deployer'
     end
-    network cfg, :c1_search
+    network cfg, :c1_deployer
   end
 
   config.vm.define :s_standalone do |cfg|
@@ -190,6 +217,18 @@ Vagrant.configure('2') do |config|
       chef.add_recipe 'cerner_splunk::server'
     end
     network cfg, :s_standalone
+  end
+
+  config.vm.define :s_search do |cfg|
+    default_omnibus config
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', 256]
+    end
+    cfg.vm.provision :chef_client do |chef|
+      chef_defaults chef, :s_search
+      chef.add_recipe 'cerner_splunk::search_head'
+    end
+    network cfg, :s_search
   end
 
   config.vm.define :f_default do |cfg|

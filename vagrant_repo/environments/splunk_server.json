@@ -7,9 +7,16 @@
         "clusters": [
           "cerner_splunk/cluster-vagrant"
         ],
+        "ui_prefs": "cerner_splunk/ui-vagrant:ui_prefs",
         "roles": "cerner_splunk/authnz-vagrant:roles",
         "authentication": "cerner_splunk/authnz-vagrant:authn",
-        "alerts": "cerner_splunk/alerts-vagrant:alerts"
+        "alerts": "cerner_splunk/alerts-vagrant:alerts",
+        "secrets": {
+          "c1_search1": "cerner_splunk/passwords:splunk.secret",
+          "c1_search2": "cerner_splunk/passwords:splunk.secret",
+          "c1_search3": "cerner_splunk/passwords:splunk.secret",
+          "c1_deployer": "cerner_splunk/passwords:splunk.secret"
+        }
       }
     }
   }

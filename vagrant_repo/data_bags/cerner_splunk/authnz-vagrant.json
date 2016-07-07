@@ -12,6 +12,7 @@
     },
     "license_server": "search_head",
     "server": "search_head",
+    "shc_configs":"search_head",
     "": {
       "LDAP_strategies": [{
         "bag": ":ldap",
@@ -50,6 +51,29 @@
         "capabilities":["!schedule_rtsearch"]
       },
       "nobody": {},
+      "user": {
+        "app":"search",
+        "capabilities":["!change_own_password","schedule_search"],
+        "srchIndexesAllowed":[],
+        "srchIndexesDefault":[]
+      },
+      "cloud-infra": {
+        "importRoles":["user"]
+      },
+      "opsinfra":{
+        "importRoles":["user"]
+      },
+      "admin": {
+        "capabilities":["change_own_password"]
+      }
+    },
+    "shc_configs": {
+      "default":{
+        "app":"launcher",
+        "tz":"America/Chicago",
+        "showWhatsNew":0,
+        "capabilities":["!schedule_rtsearch"]
+      },
       "user": {
         "app":"search",
         "capabilities":["!change_own_password","schedule_search"],

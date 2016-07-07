@@ -1,0 +1,22 @@
+{
+  "id": "ui-vagrant",
+  "ui_prefs": {
+    "shc_configs": {
+      "bag": ":base"
+    },
+    "search_head": {
+      "bag": ":base",
+      "default": {
+        "dispatch.earliest_time" : "2d@d"
+      }
+    }
+  },
+  "base": {
+    "default": {
+      "dispatch.earliest_time" : "3d@d",
+      "dispatch.latest_time" : "now",
+      "display.prefs.enableMetaData": 0,
+      "display.prefs.showDataSummary": 0
+    }
+  }
+}

@@ -22,6 +22,12 @@ Running with Vagrant
 If you want to set up the vagrant cluster to use the license pools defined in the [license pool hash](databags.md#license-pool-hash) databag, add the `configure_guids` recipe to the run_list on the cluster slave (to update the GUIDs on these slaves to predefined values) and update the `license_uri` attribute in the cluster-vagrant databag item to point to the cluster master (_https://33.33.33.30:8089_).
 After you spin up the cluster slaves you will have to restart the cluster master to bring the cluster to a stable state. While spinning up the cluster slaves, they are re-assigned with different GUIDS by the `configure_guids` recipe which requires a restart (this restart can take a while to complete). Cluster master is restarted so that it can identify the new GUIDS.
 
+# Spinning up a Search Head Cluster in Vagrant
+
+<code>vagrant up c1_search1 c1_search2 c1_search3 c1_deployer c1_search4</code>
+
+Once c1_search3 is provisioned (which has the captain recipe on the run list), it becomes the captain of the SH Cluster with members c1_search1 and c1_search2. Once the deployer is provisioned, it pushes the apps to cluster members. c1_search4 when provisioned joins the cluster. 
+
 
 Docs Navigation
 ===============

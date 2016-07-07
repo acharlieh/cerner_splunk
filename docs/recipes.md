@@ -32,6 +32,18 @@ Installs and configures Splunk Server as a cluster slave (indexer). Recieves & I
 
 Installs and configures Splunk Server as a cluster search head. Forwards logs.
 
+### `cerner_splunk::shc_search_head`
+
+Installs and configures Splunk Server as a search head in a search head cluster. Forwards logs.
+
+### `cerner_splunk::shc_captain`
+
+Installs and configures Splunk Server as a search head captain in a search head cluster. Captain assignment initializes the search head cluster.
+
+### `cerner_splunk::shc_deployer`
+
+Installs and configures Splunk Server as a deployer in a search head cluster. Deploys apps and other configurations to the search heads in a search head cluster.
+
 ### `cerner_splunk::server`
 
 Installs and configures Splunk Server as a standalone server. Recieves & Indexes logs.

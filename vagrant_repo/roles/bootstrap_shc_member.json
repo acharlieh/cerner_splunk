@@ -1,0 +1,12 @@
+{
+  "name": "bootstrap_shc_member",
+  "description": "Role used while bootstrapping a SH to a SH cluster",
+  "run_list": [
+    "recipe[cerner_splunk::shc_search_head]"
+  ],
+  "default_attributes": {
+    "splunk": {
+      "bootstrap_shc_member": true
+    }
+  }
+}

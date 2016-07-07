@@ -39,15 +39,39 @@ server_stanzas['general']['pass4SymmKey'] = proc { CernerSplunk.splunk_encrypt_p
 server_stanzas['sslConfig']['sslKeysfilePassword'] = proc { CernerSplunk.splunk_encrypt_password 'password', node.run_state['cerner_splunk']['splunk.secret'], false }
 
 case node['splunk']['node_type']
-when :search_head, :server
+when :search_head, :shc_search_head, :shc_captain, :server
   clusters = CernerSplunk.all_clusters(node).collect do |(cluster, bag)|
-    stanza = "clustermaster:#{cluster}"
     master_uri = bag['master_uri'] || ''
+    deployer_uri = bag['deployer_uri'] || ''
     settings = bag['settings'] || {}
     pass = settings['pass4SymmKey'] || ''
 
+    if [:shc_search_head, :shc_captain].include? node['splunk']['node_type']
+
+      fail "Deployer URI is not specified for #{cluster}" if deployer_uri.empty?
+
+      replication_ports = bag['replication_ports'] || {}
+      replication_ports.each do |port, port_settings|
+        ssl = port_settings['_cerner_splunk_ssl'] == true
+        stanza = ssl ? "replication_port-ssl://#{port}" : "replication_port://#{port}"
+        server_stanzas[stanza] = port_settings.reject do |k, _|
+          k.start_with? '_cerner_splunk'
+        end
+      end
+      shc_settings = (bag['shc_settings'] || {}).reject do |k, _|
+        k.start_with?('_cerner_splunk')
+      end
+
+      server_stanzas['shclustering'] = {}
+      server_stanzas['shclustering'] = shc_settings
+      server_stanzas['shclustering']['conf_deploy_fetch_url'] = deployer_uri
+      server_stanzas['shclustering']['disabled'] = 0
+      server_stanzas['shclustering']['mgmt_uri'] = "https://#{node['ipaddress']}:8089"
+    end
+
     next if master_uri.empty?
 
+    stanza = "clustermaster:#{cluster}"
     server_stanzas[stanza] = {}
     server_stanzas[stanza]['master_uri'] = master_uri
     server_stanzas[stanza]['pass4SymmKey'] = proc { CernerSplunk.splunk_encrypt_password pass, node.run_state['cerner_splunk']['splunk.secret'] } unless pass.empty?
@@ -100,7 +124,7 @@ license_uri =
   case node['splunk']['node_type']
   when :forwarder, :license_server
     'self'
-  when :cluster_master, :cluster_slave, :search_head, :server
+  when :cluster_master, :cluster_slave, :server, :search_head, :shc_search_head, :shc_captain, :shc_deployer
     if node['splunk']['free_license']
       'self'
     else
@@ -114,7 +138,7 @@ license_group =
     'Enterprise'
   when :forwarder
     'Forwarder'
-  when :search_head
+  when :search_head, :shc_search_head, :shc_captain, :shc_deployer
     if license_uri == 'self'
       'Enterprise'
     else
@@ -165,5 +189,5 @@ server_stanzas['license'] = {
 
 splunk_template 'system/server.conf' do
   stanzas server_stanzas
-  notifies :restart, 'service[splunk]'
+  notifies :restart, 'service[splunk-restart]'
 end

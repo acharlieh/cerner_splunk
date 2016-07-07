@@ -1,5 +1,5 @@
 {
-  "id": "apps-vagrant",
+  "id": "standalone-apps-vagrant",
   "apps": {
     "my_app": {
       "download": {
