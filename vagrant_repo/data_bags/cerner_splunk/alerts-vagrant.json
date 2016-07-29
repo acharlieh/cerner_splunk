@@ -7,25 +7,19 @@
         "hostname":"http://33.33.33.10:8000"
       }
     },
-    "license_server": {
-      "bag": ":base",
-      "email": {
-        "from": "splunk-license@cerner.com"
-      }
-    },
     "s_standalone": {
       "bag": ":base",
       "email": {
         "hostname":"http://33.33.33.20:8000"
       }
     },
-    "shc_configs": {
-      "bag": ":base"
-    },
     "search_head": {
-      "bag": ":base"
+      "bag": ":base",
+      "email": {
+        "reportServerEnabled":false
+      }
     },
-    "forwarder":null
+    "shc_configs": "search_head"
   },
   "base": {
     "email": {

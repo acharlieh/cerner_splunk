@@ -35,7 +35,8 @@
       }
     }
   },
-  "deployer-apps": {
+  "deployer-apps": "search_head",
+  "search_head": {
     "my_app": {
       "download": {
         "url" : "http://33.33.33.33:5000/my_app.tgz",
@@ -79,14 +80,6 @@
         "tags": {
           "export": "system"
         }
-      }
-    }
-  },
-  "search_head" : {
-    "my_app": {
-      "download": {
-        "url" : "http://33.33.33.33:5000/my_app.tgz",
-        "version" : "1.0"
       }
     }
   }
