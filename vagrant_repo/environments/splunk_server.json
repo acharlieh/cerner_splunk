@@ -7,7 +7,6 @@
         "clusters": [
           "cerner_splunk/cluster-vagrant"
         ],
-        "ui_prefs": "cerner_splunk/ui-vagrant:ui_prefs",
         "roles": "cerner_splunk/authnz-vagrant:roles",
         "authentication": "cerner_splunk/authnz-vagrant:authn",
         "alerts": "cerner_splunk/alerts-vagrant:alerts",

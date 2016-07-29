@@ -47,8 +47,8 @@ describe 'cerner_splunk::shc_captain' do
     expect(subject).to include_recipe('cerner_splunk::_install_server')
   end
 
-  it 'includes cerner_splunk::_configure_ui recipe' do
-    expect(subject).to include_recipe('cerner_splunk::_configure_ui')
+  it 'does not include cerner_splunk::_configure_ui recipe' do
+    expect(subject).not_to include_recipe('cerner_splunk::_configure_ui')
   end
 
   it 'includes cerner_splunk::_start recipe' do

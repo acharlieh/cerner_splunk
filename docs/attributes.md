@@ -36,7 +36,7 @@ Configurable (with defaults)
 * `node['splunk']['config']['secrets']` - Coordinate String (see [data bags documentation][data_bags]), pointing to a key within a Chef Vault encrypted data bag item used to configure the splunk.secret file. The value must be a string. (`nil` - secrets not managed by chef).  Note: this is currently not supported on windows.
 * `node['splunk']['config']['licenses']` - Data bag item that the license server recipe uses as the source of truth for the license data.
 * `node['splunk']['config']['license-pool']` - Data bag item used to configure license pools.
-* `node['splunk']['config']['ui_prefs']` - Data bag item used to configure [ui-prefs.conf][].
+* `node['splunk']['config']['ui_prefs']` - Hash of stanzas used to configure [ui-prefs.conf][] on the search head in a clustered configuration or a standalone instance.
 * `node['splunk']['config']['assumed_index']` - Name of the index to which data is forwarded to by default, when the index is not configured for the input.(`main`)
 * `node['splunk']['bootstrap_shc_member']` - Set this attribute to `true` to bootstrap a member to the Search Head Cluster (SHC). (`false`)
 * `node['splunk']['flags']['index_checks_fail']` - If `true` raises an exception failing the chef run, when monitors are configured to be sent to non-existent indexes. If `false` logs a warning, but does not fail the chef run for the same condition.(`true`)

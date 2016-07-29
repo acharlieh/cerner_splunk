@@ -37,7 +37,8 @@ app_configs = {
         'is_visible' => '0',
         'label' => 'Deployer Configs App'
       }
-    }
+    },
+    'ui-prefs.conf' => node['splunk']['config']['ui_prefs']
   },
   'permissions' => {
     '' => {
@@ -67,5 +68,4 @@ include_recipe 'cerner_splunk::_configure_shc_roles'
 include_recipe 'cerner_splunk::_configure_shc_authentication'
 include_recipe 'cerner_splunk::_configure_shc_outputs'
 include_recipe 'cerner_splunk::_configure_shc_alerts'
-include_recipe 'cerner_splunk::_configure_shc_ui'
 include_recipe 'cerner_splunk::_start'

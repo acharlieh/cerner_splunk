@@ -13,7 +13,6 @@ fail 'Search Heads are not configured for sh clustering in the cluster databag' 
 instance_exec :shc_captain, &CernerSplunk::NODE_TYPE
 ## Recipes
 include_recipe 'cerner_splunk::_install_server'
-include_recipe 'cerner_splunk::_configure_ui'
 include_recipe 'cerner_splunk::_start'
 
 cerner_splunk_sh_cluster 'Captain assignment' do

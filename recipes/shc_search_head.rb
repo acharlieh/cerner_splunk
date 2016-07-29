@@ -14,7 +14,6 @@ instance_exec :shc_search_head, &CernerSplunk::NODE_TYPE
 
 ## Recipes
 include_recipe 'cerner_splunk::_install_server'
-include_recipe 'cerner_splunk::_configure_ui'
 include_recipe 'cerner_splunk::_start'
 
 cerner_splunk_sh_cluster 'add SH to SHC' do

@@ -48,25 +48,6 @@ describe 'cerner_splunk::shc_deployer' do
     }
   end
 
-  let(:deployer_app_config) do
-    {
-      'files' => {
-        'app.conf' => {
-          'ui' => {
-            'is_visible' => '0',
-            'label' => 'Deployer Configs App'
-          }
-        }
-      },
-      'permissions' => {
-        '' => {
-          'access' => { 'read' => '*' },
-          'export' => 'system'
-        }
-      }
-    }
-  end
-
   before do
     allow(Chef::DataBagItem).to receive(:load).with('cerner_splunk', 'cluster').and_return(cluster_config)
     allow(Chef::DataBagItem).to receive(:load).with('cerner_splunk', 'indexes').and_return({})
@@ -99,7 +80,7 @@ describe 'cerner_splunk::shc_deployer' do
   end
 
   it 'create the deployer-configs app and notifies the execute[apply-shcluster-bundle] resource to run' do
-    expect(subject).to create_splunk_app('deployer-configs').with(deployer_app_config)
+    expect(subject).to create_splunk_app('deployer-configs')
     expect(subject.splunk_app('deployer-configs')).to notify('execute[apply-shcluster-bundle]').to(:run)
   end
 

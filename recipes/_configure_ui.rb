@@ -5,11 +5,7 @@
 #
 # Configures the ui settings for the system
 
-hash = CernerSplunk::DataBag.load(node['splunk']['config']['ui_prefs'], pick_context: CernerSplunk.keys(node)) || {}
-ui_stanzas = CernerSplunk::UI.configure_ui(node, hash)
-
 splunk_template 'system/ui-prefs.conf' do
-  stanzas ui_stanzas
-  not_if { ui_stanzas.empty? }
+  stanzas node['splunk']['config']['ui_prefs']
   notifies :touch, 'file[splunk-marker]', :immediately
 end
