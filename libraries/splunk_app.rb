@@ -69,7 +69,7 @@ class Chef
 
       def local(arg = nil)
         val = set_or_return(:local, arg, kind_of: [TrueClass, FalseClass])
-        url.nil? || url.empty? ? val : true
+        (url.nil? || url.empty?) ? val : true
       end
 
       def files(arg = nil)
@@ -220,8 +220,8 @@ class Chef
       end
 
       def validate_downloaded(tarfile)
-        fail "Downloaded tarball from '#{new_resource.url}' does not contain an app named '#{new_resource.app}'" if tarfile.num_files.zero?
-        fail "Downloaded tarball for '#{new_resource.app}' has local entries" unless tarfile.count { |p, _| p.match %r{^[^/]+/local/.+} }.zero?
+        fail "Downloaded tarball from '#{new_resource.url}' does not contain an app named '#{new_resource.app}'" if tarfile.num_files == 0
+        fail "Downloaded tarball for '#{new_resource.app}' has local entries" unless tarfile.count { |p, _| p.match %r{^[^/]+/local/.+} } == 0
       end
 
       def should_install?(expected_version, installed_version, tar_version) # rubocop:disable PerceivedComplexity, CyclomaticComplexity
