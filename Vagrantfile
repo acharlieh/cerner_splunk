@@ -16,11 +16,11 @@ end
   c1_slave3:    { ip: '33.33.33.14', hostname: 'slave03.splunk', ports: { 8005 => 8000, 8095 => 8089 } },
   s_standalone: { ip: '33.33.33.20', hostname: 'splunk2', ports: { 8006 => 8000, 8096 => 8089 } },
   s_license:    { ip: '33.33.33.30', hostname: 'splunk-license', ports: { 8007 => 8000, 8097 => 8089 } },
-  c1_search1:   { ip: '33.33.33.15', hostname: 'search01.splunk', ports: { 8008 => 8000, 8098 => 8089 } },
-  c1_search2:   { ip: '33.33.33.16', hostname: 'search02.splunk', ports: { 8009 => 8000, 8099 => 8089 } },
-  c1_search3:   { ip: '33.33.33.17', hostname: 'search03.splunk', ports: { 8010 => 8000, 8100 => 8089 } },
-  c1_search4:   { ip: '33.33.33.18', hostname: 'search04.splunk', ports: { 8011 => 8000, 8101 => 8089 } },
-  c1_deployer:  { ip: '33.33.33.28', hostname: 'deployer.splunk', ports: { 8012 => 8000, 8102 => 8089 } },
+  c2_boot1:     { ip: '33.33.33.15', hostname: 'search01.splunk', ports: { 8008 => 8000, 8098 => 8089 } },
+  c2_boot2:     { ip: '33.33.33.16', hostname: 'search02.splunk', ports: { 8009 => 8000, 8099 => 8089 } },
+  c2_captain:   { ip: '33.33.33.17', hostname: 'search03.splunk', ports: { 8010 => 8000, 8100 => 8089 } },
+  c2_newnode:   { ip: '33.33.33.18', hostname: 'search04.splunk', ports: { 8011 => 8000, 8101 => 8089 } },
+  c2_deployer:  { ip: '33.33.33.28', hostname: 'deployer.splunk', ports: { 8012 => 8000, 8102 => 8089 } },
   f_default:    { ip: '33.33.33.50', hostname: 'default.forward', ports: { 9090 => 8089 } },
   f_debian:     { ip: '33.33.33.51', hostname: 'debian.forward', ports: { 9091 => 8089 } },
   f_heavy:      { ip: '33.33.33.52', hostname: 'heavy.forward', ports: { 9092 => 8089 } },
@@ -186,8 +186,8 @@ Vagrant.configure('2') do |config|
     network cfg, :c1_search
   end
 
-  (1..4).each do |n|
-    symbol = "c1_search#{n}".to_sym
+  (1..2).each do |n|
+    symbol = "c2_boot#{n}".to_sym
     config.vm.define symbol do |cfg|
       default_omnibus config
       cfg.vm.provider :virtualbox do |vb|
@@ -195,28 +195,46 @@ Vagrant.configure('2') do |config|
       end
       cfg.vm.provision :chef_client do |chef|
         chef_defaults chef, symbol
-        if symbol == :c1_search3
-          chef.add_recipe 'cerner_splunk::shc_captain' # assign c1_search3 as the captain
-        elsif symbol == :c1_search4
-          chef.add_recipe 'cerner_splunk::shc_search_head'
-        else
-          chef.add_role 'bootstrap_shc_member'
-        end
+        chef.add_role 'bootstrap_shc_member'
       end
       network cfg, symbol
     end
   end
 
-  config.vm.define :c1_deployer do |cfg|
+  config.vm.define :c2_captain do |cfg|
     default_omnibus config
     cfg.vm.provider :virtualbox do |vb|
       vb.customize ['modifyvm', :id, '--memory', 256]
     end
     cfg.vm.provision :chef_client do |chef|
-      chef_defaults chef, :c1_deployer
+      chef_defaults chef, :c2_captain
+      chef.add_recipe 'cerner_splunk::shc_captain'
+    end
+    network cfg, :c2_captain
+  end
+
+  config.vm.define :c2_deployer do |cfg|
+    default_omnibus config
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', 256]
+    end
+    cfg.vm.provision :chef_client do |chef|
+      chef_defaults chef, :c2_deployer
       chef.add_recipe 'cerner_splunk::shc_deployer'
     end
-    network cfg, :c1_deployer
+    network cfg, :c2_deployer
+  end
+
+  config.vm.define :c2_newnode do |cfg|
+    default_omnibus config
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', 256]
+    end
+    cfg.vm.provision :chef_client do |chef|
+      chef_defaults chef, :c2_newnode
+      chef.add_recipe 'cerner_splunk::shc_search_head'
+    end
+    network cfg, :c2_newnode
   end
 
   config.vm.define :s_standalone do |cfg|

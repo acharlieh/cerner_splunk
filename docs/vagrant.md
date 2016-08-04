@@ -24,10 +24,9 @@ After you spin up the cluster slaves you will have to restart the cluster master
 
 # Spinning up a Search Head Cluster in Vagrant
 
-<code>vagrant up c1_search1 c1_search2 c1_search3 c1_deployer c1_search4</code>
+<code>vagrant up /c2_.*/</code>
 
-Once c1_search3 is provisioned (which has the captain recipe on the run list), it becomes the captain of the SH Cluster with members c1_search1 and c1_search2. Once the deployer is provisioned, it pushes the apps to cluster members. c1_search4 when provisioned joins the cluster. 
-
+c2_boot1 and c2_boot2 are the bootstrap nodes and are provisioned first. c2_captain is then provisioned and the cluster is established. c2_deployer is provisioned and pushes apps to the cluster. Finally c2_newnode is provisioned and joins the cluster as a scale up example.
 
 Docs Navigation
 ===============
