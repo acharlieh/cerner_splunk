@@ -157,7 +157,7 @@ Vagrant.configure('2') do |config|
   end
 
   # Cruisin' Mos Espa In my Delorean ...
-  (1..3).each do |n|
+  [1].each do |n|
     symbol = "c1_slave#{n}".to_sym
     config.vm.define symbol do |cfg|
       default_omnibus config
