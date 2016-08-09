@@ -13,14 +13,6 @@
     "license_server": "search_head",
     "server": "search_head",
     "shc_configs":"search_head",
-    "": {
-      "LDAP_strategies": [{
-        "bag": ":ldap",
-        "roleMap" : {
-          "admin": "DevOps_SuperAdmins"
-        }
-      }]
-    },
     "forwarder":null
   },
   "ldap":{
