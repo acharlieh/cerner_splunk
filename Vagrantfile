@@ -195,7 +195,12 @@ Vagrant.configure('2') do |config|
       end
       cfg.vm.provision :chef_client do |chef|
         chef_defaults chef, symbol
-        chef.add_role 'bootstrap_shc_member'
+        chef.add_recipe 'cerner_splunk::shc_search_head'
+        chef.json = {
+          'splunk' => {
+            'bootstrap_shc_member': true
+          }
+        }
       end
       network cfg, symbol
     end
