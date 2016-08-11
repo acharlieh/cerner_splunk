@@ -72,6 +72,7 @@ class Chef
 
       def after_created
         @path = "#{node['splunk']['home']}/#{@path}"
+
         config_file = ::File.basename(@path)
         return if KNOWN_CONFIG_FILES.include? config_file
         message = "#{config_file} is not known to this resource. Check spelling or submit a pull request."

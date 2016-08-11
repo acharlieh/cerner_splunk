@@ -39,6 +39,5 @@ action :remove do
     environment 'HOME' => node['splunk']['home']
     # execute only if this SH is an existing member of the SHC
     only_if "#{node['splunk']['cmd']} list shcluster-members -auth admin:#{admin_password} | grep #{node['ipaddress']}"
-    notifies :stop, 'service[splunk]', :immediately
   end
 end
