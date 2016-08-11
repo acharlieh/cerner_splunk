@@ -38,7 +38,7 @@ server_stanzas['general']['pass4SymmKey'] = proc { CernerSplunk.splunk_encrypt_p
 # default sslKeysfilePassword value is 'password'
 server_stanzas['sslConfig']['sslKeysfilePassword'] = proc { CernerSplunk.splunk_encrypt_password 'password', node.run_state['cerner_splunk']['splunk.secret'], false }
 
-#Indexer Cluster Configuration
+# Indexer Cluster Configuration
 case node['splunk']['node_type']
 when :search_head, :shc_search_head, :shc_captain, :server
   clusters = CernerSplunk.all_clusters(node).collect do |(cluster, bag)|
