@@ -198,7 +198,7 @@ Vagrant.configure('2') do |config|
         chef.add_recipe 'cerner_splunk::shc_search_head'
         chef.json = {
           'splunk' => {
-            'bootstrap_shc_member': true
+            'bootstrap_shc_member' => true
           }
         }
       end
