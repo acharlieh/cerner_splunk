@@ -17,7 +17,10 @@ describe 'cerner_splunk::shc_captain' do
         'https://33.33.33.16:8089',
         'https://33.33.33.17:8089'
       ],
-      'deployer_uri' => 'https://33.33.33.28:8089'
+      'deployer_uri' => 'https://33.33.33.28:8089',
+      'replication_ports' => {
+        '8080' => {}
+      }
     }
   end
 
