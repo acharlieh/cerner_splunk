@@ -145,11 +145,11 @@ license_uri =
 
 license_group =
   case node['splunk']['node_type']
-  when :license_server, :cluster_master, :cluster_slave
+  when :license_server, :cluster_master, :cluster_slave, :shc_search_head, :shc_captain, :shc_deployer
     'Enterprise'
   when :forwarder
     'Forwarder'
-  when :search_head, :shc_search_head, :shc_captain, :shc_deployer
+  when :search_head
     if license_uri == 'self'
       'Enterprise'
     else
