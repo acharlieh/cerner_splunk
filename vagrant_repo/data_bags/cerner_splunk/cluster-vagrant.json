@@ -27,7 +27,8 @@
     "https://33.33.33.17:8089"
   ],
   "shc_settings":{
-    "replication_factor" : 2
+    "replication_factor" : 2,
+    "shcluster_label": "main-cluster"
   },
   "indexes" : "cerner_splunk/indexes-vagrant",
   "apps": "cerner_splunk/cluster-apps-vagrant"
