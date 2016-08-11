@@ -69,6 +69,7 @@ end
 
 Vagrant.configure('2') do |config|
   config.vm.box = 'bento/centos-6.7'
+  config.ohai.primary_nic = 'eth1'
 
   if Vagrant.has_plugin? 'vagrant-berkshelf'
     config.berkshelf.enabled = false
@@ -84,7 +85,6 @@ Vagrant.configure('2') do |config|
 
   config.vm.define :chef do |cfg|
     config.omnibus.chef_version = nil
-    config.ohai.primary_nic = 'eth1'
 
     cfg.vm.provision :shell, inline: 'rpm -q chefdk || curl -L https://omnitruck.chef.io/install.sh | bash -s -- -P chefdk'
 
